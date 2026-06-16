@@ -1,5 +1,6 @@
 {
-  "name": "odysseus",
+  "name": "hatsune miku",
+  "author": "Kanna",
   "version": "1.0.0",
   "description": "On-device AI chatbot with knowledge graph brain",
   "main": "main.js",
@@ -15,8 +16,8 @@
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "appId": "com.odysseus.app",
-    "productName": "Odysseus",
+    "appId": "com.hatsunemiku.app",
+    "productName": "Hatsune Miku",
     "directories": {
       "output": "dist"
     },
