@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Odysseus</title>
+<title>Hatsune Miku</title>
 <style>
   :root {
     /* Palette: #373b3e · #bec8d1 · #86cecb · #137a7f · #e12885 */
@@ -642,9 +642,9 @@ function draw() {
   edges.forEach(e => {
     const a=nodes.find(n=>n.id===e.s),b=nodes.find(n=>n.id===e.t); if(!a||!b) return;
     ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
-    ctx.strokeStyle='rgba(127,119,221,0.2)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.strokeStyle='rgba(19,122,127,0.3)'; ctx.lineWidth=1; ctx.stroke();
     if(e.rel){
-      ctx.font='9px sans-serif'; ctx.fillStyle='rgba(127,119,221,0.5)'; ctx.textAlign='center';
+      ctx.font='9px sans-serif'; ctx.fillStyle='rgba(19,122,127,0.3)'; ctx.textAlign='center';
       ctx.fillText(e.rel,(a.x+b.x)/2,(a.y+b.y)/2-2);
     }
   });
