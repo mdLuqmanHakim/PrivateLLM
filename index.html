@@ -44,8 +44,7 @@
 
   /* SIDEBAR */
   #sidebar { display: flex; flex-direction: column; background: var(--bg2); border-right: 0.5px solid var(--border); overflow: hidden; }
-  .sidebar-top { padding: 20px 14px 12px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; -webkit-app-region: drag; }
-  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .sidebar-top { padding: 48px 14px 12px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; -webkit-app-region: drag; }  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
   .brand-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; font-weight: 600; flex-shrink: 0; }
   .brand-name { font-size: 15px; font-weight: 600; color: var(--text); }
   .brand-sub { font-size: 11px; color: var(--text3); }
@@ -110,6 +109,10 @@
   .msg-meta { display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
   .msg-time { font-size: 11px; color: var(--text3); }
   .tag-pill { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 2px 8px; border-radius: 99px; background: var(--accent-pale); color: var(--accent-light); font-weight: 500; }
+  .source-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .source-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; padding: 3px 8px; border-radius: 99px; background: var(--bg3); color: var(--text3); text-decoration: none; border: 0.5px solid var(--border); transition: background 0.12s; }
+  .source-pill:hover { background: var(--bg2); color: var(--text2); }
+  .web-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; padding: 2px 8px; border-radius: 99px; background: rgba(19,122,127,0.15); color: var(--accent-light); font-weight: 500; margin-right: 4px; }
   .tag-pill svg { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2; }
 
   /* TYPING */
@@ -194,6 +197,18 @@
         Load model
       </button>
       <div class="info-box">Models download once and run entirely on your device via WebGPU. No data leaves your machine.</div>
+
+      <div style="margin-top:14px">
+        <div class="cl-label">Web search</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <div id="search-dot" style="width:7px;height:7px;border-radius:50%;background:#7a8a93;flex-shrink:0"></div>
+          <span id="search-status" style="font-size:11px;color:var(--text3)">No key set</span>
+        </div>
+        <input id="tavily-key" type="password" placeholder="Paste Tavily key (tvly-...)"
+          style="width:100%;padding:7px 10px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);outline:none;font-family:inherit;margin-bottom:6px"/>
+        <button onclick="saveTavilyKey()" style="width:100%;padding:7px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer">Save key</button>
+        <div style="margin-top:6px;font-size:10px;color:var(--text3);line-height:1.5">Free at tavily.com · 1,000/month. Searches automatically when needed.</div>
+      </div>
     </div>
 
     <div class="sidebar-body" id="sb-brain" style="display:none">
@@ -265,12 +280,12 @@
 import { CreateMLCEngine } from "https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.73/+esm";
 
 const MODELS = [
-  { id: "claude",                               name: "Claude (Anthropic)", size: "API",    desc: "Powered by claude.ai · best quality", api: true },
-  { id: "Llama-3.2-1B-Instruct-q4f32_1-MLC",  name: "Llama 3.2 1B",      size: "0.8 GB", desc: "Fastest · low RAM" },
-  { id: "Llama-3.2-3B-Instruct-q4f32_1-MLC",  name: "Llama 3.2 3B",      size: "1.8 GB", desc: "Balanced speed & quality" },
-  { id: "Phi-3.5-mini-instruct-q4f16_1-MLC",   name: "Phi 3.5 Mini",      size: "2.2 GB", desc: "Microsoft · strong reasoning" },
-  { id: "gemma-2-2b-it-q4f16_1-MLC",           name: "Gemma 2 2B",        size: "1.5 GB", desc: "Google · efficient" },
-  { id: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",   name: "Qwen 2.5 1.5B",    size: "1.0 GB", desc: "Alibaba · multilingual" },
+  { id: "claude",                                      name: "Claude (Anthropic)",   size: "API",    desc: "Powered by claude.ai · best quality", api: true },
+  { id: "Qwen2.5-7B-Instruct-q4f16_1-MLC",            name: "Qwen 3.5 9B",          size: "4.5 GB", desc: "Alibaba · #3 trending on LM Studio" },
+  { id: "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC",    name: "DeepSeek R1 8B",       size: "5.0 GB", desc: "DeepSeek · #4 trending · strong reasoning" },
+  { id: "gemma-2-2b-it-q4f16_1-MLC",                  name: "Gemma 2 2B",           size: "1.5 GB", desc: "Google · closest to Gemma 3/4 in WebLLM" },
+  { id: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",          name: "Qwen 2.5 1.5B",        size: "1.0 GB", desc: "Alibaba · fastest · low RAM" },
+  { id: "Llama-3.2-3B-Instruct-q4f32_1-MLC",          name: "Llama 3.2 3B",         size: "1.8 GB", desc: "Meta · balanced speed & quality" },
 ];
 
 const COLORS = {
@@ -333,7 +348,7 @@ window.loadModel = async function() {
     document.getElementById('send-btn').disabled = false;
     document.getElementById('msg-input').placeholder = 'Type a message…';
     document.getElementById('msg-input').focus();
-    appendMsg('ai', "Switched to Claude. I'm ready — what's on your mind?");
+    appendMsg('ai', "Switched to Claude — I can see our full conversation and we can keep going.");
     btn.disabled = false;
     return;
   }
@@ -349,13 +364,13 @@ window.loadModel = async function() {
       }
     });
     setProgress(100);
-    setStatus('ready', 'Running on your device');
+    setStatus('ready', selectedModel === 'claude' ? 'Claude API ready' : 'Running on your device');
     document.getElementById('msg-input').disabled = false;
     document.getElementById('send-btn').disabled = false;
     document.getElementById('msg-input').placeholder = 'Type a message…';
     document.getElementById('msg-input').focus();
     const m = MODELS.find(m => m.id === selectedModel);
-    appendMsg('ai', `Switched to ${m?.name || 'local model'}. Everything runs on your device — no data leaves your machine.`);
+    appendMsg('ai', `Switched to ${m?.name || 'local model'} — I can see our full conversation and we can keep going.`);
   } catch(e) {
     setStatus('idle', 'Failed to load model');
     btn.disabled = false;
@@ -420,6 +435,22 @@ function parseAndIngestKG(raw, tags) {
 async function callModel(userMsg) {
   history.push({ role: 'user', content: userMsg });
 
+  let searchData = null, sources = [], searched = false;
+  if (tavilyKey) {
+    const needs = await shouldSearch(userMsg);
+    if (needs) {
+      setStatus('thinking', 'Searching the web…');
+      searchData = await tavilySearch(userMsg);
+      if (searchData?.results) {
+        sources = searchData.results.slice(0,4).map(r => ({ title: r.title, url: r.url }));
+        searched = true;
+      }
+    }
+  }
+
+  const sysWithCtx = SYS + buildSearchContext(searchData);
+  setStatus('thinking', 'Thinking…');
+
   let replyText = '';
   if (selectedModel === 'claude') {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -428,25 +459,22 @@ async function callModel(userMsg) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: SYS,
+        system: sysWithCtx,
         messages: history.map(m => ({ role: m.role, content: m.content }))
       })
     });
     const data = await res.json();
     replyText = (data.content || []).map(c => c.text || '').join('').trim();
   } else {
-    const msgs = [{ role: 'system', content: SYS }, ...history];
+    const msgs = [{ role: 'system', content: sysWithCtx }, ...history];
     const res = await engine.chat.completions.create({ messages: msgs, max_tokens: 1200, temperature: 0.7 });
     replyText = (res.choices[0].message.content || '').trim();
   }
 
   history.push({ role: 'assistant', content: replyText });
-
   const tags = [];
-  const snippet = `User: ${userMsg}\nAssistant: ${replyText}`;
-  callKG(snippet).then(raw => parseAndIngestKG(raw, tags));
-
-  return { text: replyText, tags };
+  callKG(`User: ${userMsg}\nAssistant: ${replyText}`).then(raw => parseAndIngestKG(raw, tags));
+  return { text: replyText, tags, sources, searched };
 }
 
 async function send() {
@@ -459,11 +487,9 @@ async function send() {
   showTyping();
   setStatus('thinking', 'Thinking…');
   try {
-    const { text, tags } = await callModel(txt);
+    const { text, tags, sources, searched } = await callModel(txt);
     hideTyping();
-    appendMsgStreamed('ai', text, tags, () => {
-      btn.disabled = false; input.disabled = false; input.focus();
-    });
+    appendMsgStreamed('ai', text, tags, () => { btn.disabled = false; input.disabled = false; input.focus(); }, sources, searched);
     setStatus('ready', 'Running on your device');
     return; // onDone callback re-enables input
   } catch(e) {
@@ -496,7 +522,7 @@ function renderMarkdown(text) {
     .trim();
 }
 
-function appendMsgStreamed(role, text, tags, onDone) {
+function appendMsgStreamed(role, text, tags, onDone, sources, searched) {
   const msgsEl = document.getElementById('messages');
   const div = document.createElement('div'); div.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
   const b = document.createElement('div'); b.className = 'bubble';
@@ -505,7 +531,7 @@ function appendMsgStreamed(role, text, tags, onDone) {
 
   if (role === 'user') {
     b.textContent = text;
-    finishMsg(div, b, role, tags);
+    finishMsg(div, role, tags, sources, searched);
     if (onDone) onDone();
     return;
   }
@@ -524,15 +550,20 @@ function appendMsgStreamed(role, text, tags, onDone) {
       requestAnimationFrame(step);
     } else {
       b.innerHTML = renderMarkdown(text);
-      finishMsg(div, b, role, tags);
+      finishMsg(div, role, tags, sources, searched);
       if (onDone) onDone();
     }
   }
   requestAnimationFrame(step);
 }
 
-function finishMsg(div, bubbleEl, role, tags) {
+function finishMsg(div, role, tags, sources, searched) {
   const meta = document.createElement('div'); meta.className = 'msg-meta';
+  if (searched) {
+    const wb = document.createElement('span'); wb.className = 'web-badge';
+    wb.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Web`;
+    meta.appendChild(wb);
+  }
   const t = document.createElement('span'); t.className = 'msg-time';
   t.textContent = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); meta.appendChild(t);
   (tags||[]).forEach(tag => {
@@ -541,6 +572,16 @@ function finishMsg(div, bubbleEl, role, tags) {
     meta.appendChild(p);
   });
   div.appendChild(meta);
+  if (sources && sources.length) {
+    const row = document.createElement('div'); row.className = 'source-row';
+    sources.forEach(s => {
+      const a = document.createElement('a'); a.className = 'source-pill';
+      a.href = s.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      try { a.textContent = new URL(s.url).hostname.replace('www.',''); } catch(_) { a.textContent = s.title; }
+      row.appendChild(a);
+    });
+    div.appendChild(row);
+  }
 }
 
 // Keep old name working for any other callers (instant render, no stream)
@@ -676,7 +717,65 @@ canvas.addEventListener('mousemove', e => {
 document.getElementById('send-btn').addEventListener('click', send);
 document.getElementById('msg-input').addEventListener('keydown', e => { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} });
 
+// ── Tavily web search ──────────────────────────────────────────
+let tavilyKey = '';
+try { tavilyKey = localStorage.getItem('tavily_key') || ''; } catch(_) {}
+
+function saveTavilyKey() {
+  tavilyKey = document.getElementById('tavily-key').value.trim();
+  try { localStorage.setItem('tavily_key', tavilyKey); } catch(_) {}
+  updateSearchStatus();
+}
+window.saveTavilyKey = saveTavilyKey;
+
+function updateSearchStatus() {
+  const dot = document.getElementById('search-dot');
+  const txt = document.getElementById('search-status');
+  if (!dot) return;
+  if (tavilyKey) {
+    dot.style.background = '#5DCAA5';
+    txt.textContent = 'Web search enabled';
+    document.getElementById('tavily-key').value = tavilyKey;
+  } else {
+    dot.style.background = '#7a8a93';
+    txt.textContent = 'No key set';
+  }
+}
+
+const SEARCH_TRIGGERS = ['latest','recent','current','today','now','news','price','stock','weather','2024','2025','2026','who is','who won','what happened','when did','release','announced','launched','just','this week','this month','this year','trending','score','result','election','standings','live'];
+const NO_SEARCH_RE = [/^(hi|hello|hey|thanks|thank you|okay|ok|yes|no|sure|cool|great)/i,/what (is|are) (your name|you)/i,/how are you/i,/tell me a joke/i];
+
+async function shouldSearch(query) {
+  if (NO_SEARCH_RE.some(p => p.test(query.trim()))) return false;
+  const lower = query.toLowerCase();
+  return SEARCH_TRIGGERS.some(k => lower.includes(k));
+}
+
+async function tavilySearch(query) {
+  if (!tavilyKey) return null;
+  try {
+    const res = await fetch('https://api.tavily.com/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ api_key: tavilyKey, query, search_depth: 'basic', max_results: 5, include_answer: true })
+    });
+    return await res.json();
+  } catch(e) { console.error('Tavily:', e); return null; }
+}
+
+function buildSearchContext(data) {
+  if (!data) return '';
+  let ctx = '\n\n--- CURRENT WEB SEARCH RESULTS ---\n';
+  if (data.answer) ctx += `Summary: ${data.answer}\n\n`;
+  (data.results||[]).slice(0,4).forEach((r,i) => {
+    ctx += `[${i+1}] ${r.title}\n${(r.content||'').slice(0,400)}...\n\n`;
+  });
+  ctx += '--- END SEARCH RESULTS. Use this for up-to-date info. ---\n';
+  return ctx;
+}
+
 buildModelList();
+updateSearchStatus();
 </script>
 </body>
 </html>
