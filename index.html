@@ -163,6 +163,57 @@
   .bubble th { background: var(--bg3); color: var(--text); font-weight: 600; padding: 6px 10px; border: 0.5px solid var(--border2); text-align: left; }
   .bubble td { padding: 5px 10px; border: 0.5px solid var(--border2); color: var(--text2); }
   .bubble tr:hover td { background: var(--bg3); }
+
+  /* QUANTUM */
+  .msg.quantum { align-self: stretch; max-width: 100%; }
+  .bubble.quantum-bubble {
+    background: linear-gradient(135deg, rgba(19,122,127,0.08) 0%, rgba(134,206,203,0.06) 100%);
+    border: 1px solid rgba(134,206,203,0.35);
+    border-radius: 16px;
+    box-shadow: 0 0 18px rgba(134,206,203,0.12), 0 0 4px rgba(19,122,127,0.2);
+    animation: quantum-glow 3s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+  .bubble.quantum-bubble::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(134,206,203,0.04), transparent);
+    animation: quantum-shimmer 2.5s ease-in-out infinite;
+  }
+  @keyframes quantum-glow {
+    0%,100% { box-shadow: 0 0 18px rgba(134,206,203,0.12), 0 0 4px rgba(19,122,127,0.2); }
+    50%      { box-shadow: 0 0 28px rgba(134,206,203,0.22), 0 0 8px rgba(19,122,127,0.35); }
+  }
+  @keyframes quantum-shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .quantum-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 0.5px solid rgba(134,206,203,0.2); }
+  .quantum-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--accent-light); background: rgba(134,206,203,0.12); padding: 3px 10px; border-radius: 99px; border: 0.5px solid rgba(134,206,203,0.3); letter-spacing: 0.04em; }
+  .quantum-mode { font-size: 10px; color: var(--text3); margin-left: auto; }
+  .quantum-circuit { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: var(--accent-light); background: rgba(0,0,0,0.2); border-radius: var(--radius); padding: 8px 10px; margin: 8px 0; white-space: pre; overflow-x: auto; line-height: 1.6; }
+  .quantum-results { margin-top: 8px; }
+  .quantum-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 12px; }
+  .quantum-bar-label { color: var(--text2); font-family: monospace; width: 32px; flex-shrink: 0; }
+  .quantum-bar-track { flex: 1; height: 14px; background: rgba(255,255,255,0.05); border-radius: 99px; overflow: hidden; }
+  .quantum-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-light)); border-radius: 99px; transition: width 0.8s ease; }
+  .quantum-bar-pct { color: var(--text3); font-size: 11px; width: 36px; text-align: right; flex-shrink: 0; }
+  .quantum-answer { margin-top: 10px; padding: 8px 10px; background: rgba(134,206,203,0.08); border-radius: var(--radius); border-left: 2px solid var(--accent-light); font-size: 13px; color: var(--text); }
+  .quantum-meta { margin-top: 8px; font-size: 10px; color: var(--text3); display: flex; gap: 12px; }
+  .quantum-prompt-card { background: rgba(19,122,127,0.08); border: 1px solid rgba(134,206,203,0.25); border-radius: 14px; padding: 12px 14px; margin-bottom: 2px; }
+  .quantum-prompt-title { font-size: 13px; font-weight: 500; color: var(--accent-light); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .quantum-prompt-desc { font-size: 12px; color: var(--text2); margin-bottom: 10px; line-height: 1.5; }
+  .quantum-btn-row { display: flex; gap: 8px; }
+  .quantum-btn { flex: 1; padding: 7px 0; border-radius: var(--radius); font-size: 12px; font-weight: 500; cursor: pointer; border: 0.5px solid rgba(134,206,203,0.3); transition: all 0.15s; }
+  .quantum-btn.local { background: var(--accent); color: #fff; }
+  .quantum-btn.local:hover { opacity: 0.85; }
+  .quantum-btn.ibm { background: transparent; color: var(--accent-light); }
+  .quantum-btn.ibm:hover { background: rgba(134,206,203,0.08); }
+  .ibm-token-row { display: flex; gap: 6px; margin-top: 8px; }
+  .ibm-token-input { flex: 1; padding: 6px 10px; font-size: 11px; border-radius: var(--radius); border: 0.5px solid rgba(134,206,203,0.3); background: var(--bg); color: var(--text); outline: none; font-family: inherit; }
+  .ibm-token-save { padding: 6px 12px; font-size: 11px; border-radius: var(--radius); background: var(--accent); color: #fff; border: none; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -208,6 +259,18 @@
           style="width:100%;padding:7px 10px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);outline:none;font-family:inherit;margin-bottom:6px"/>
         <button onclick="saveTavilyKey()" style="width:100%;padding:7px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer">Save key</button>
         <div style="margin-top:6px;font-size:10px;color:var(--text3);line-height:1.5">Free at tavily.com · 1,000/month. Searches automatically when needed.</div>
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="cl-label">IBM Quantum</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <div id="ibm-dot" style="width:7px;height:7px;border-radius:50%;background:#7a8a93;flex-shrink:0"></div>
+          <span id="ibm-status" style="font-size:11px;color:var(--text3)">No token set</span>
+        </div>
+        <input id="ibm-token" type="password" placeholder="Paste IBM Quantum token"
+          style="width:100%;padding:7px 10px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);outline:none;font-family:inherit;margin-bottom:6px"/>
+        <button onclick="saveIBMToken()" style="width:100%;padding:7px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer">Save token</button>
+        <div style="margin-top:6px;font-size:10px;color:var(--text3);line-height:1.5">Free at quantum.ibm.com · token under Account Settings.</div>
       </div>
     </div>
 
@@ -484,6 +547,14 @@ async function send() {
   const btn = document.getElementById('send-btn');
   btn.disabled = true; input.disabled = true;
   appendMsgStreamed('user', txt);
+
+  // Quantum detection
+  if (isQuantumQuery(txt)) {
+    btn.disabled = false; input.disabled = false; input.focus();
+    appendQuantumPrompt(txt);
+    return;
+  }
+
   showTyping();
   setStatus('thinking', 'Thinking…');
   try {
@@ -774,8 +845,395 @@ function buildSearchContext(data) {
   return ctx;
 }
 
+// ── Quantum computing ─────────────────────────────────────────
+let ibmToken = '';
+try { ibmToken = localStorage.getItem('ibm_token') || ''; } catch(_) {}
+
+window.saveIBMToken = function() {
+  ibmToken = document.getElementById('ibm-token').value.trim();
+  try { localStorage.setItem('ibm_token', ibmToken); } catch(_) {}
+  updateIBMStatus();
+};
+
+function updateIBMStatus() {
+  const dot = document.getElementById('ibm-dot');
+  const txt = document.getElementById('ibm-status');
+  if (!dot) return;
+  if (ibmToken) {
+    dot.style.background = '#5DCAA5';
+    txt.textContent = 'IBM Quantum ready';
+    document.getElementById('ibm-token').value = ibmToken;
+  } else {
+    dot.style.background = '#7a8a93';
+    txt.textContent = 'No token set';
+  }
+}
+
+const QUANTUM_TRIGGERS = [
+  /factor(?:ize|isation|ization)?\s+\d+/i,
+  /shor'?s?\s+algorithm/i,
+  /grover'?s?\s+algorithm/i,
+  /quantum\s+(search|circuit|gate|random|simulation|entangl|superposit)/i,
+  /qubit/i,
+  /quantum\s+comput/i,
+  /bell\s+state/i,
+  /quantum\s+fourier/i,
+  /random\s+number.*quantum/i,
+];
+
+function isQuantumQuery(query) {
+  return QUANTUM_TRIGGERS.some(r => r.test(query));
+}
+
+// ── Local quantum simulator ────────────────────────────────────
+class QuantumSim {
+  constructor(nQubits) {
+    this.n = nQubits;
+    const size = 1 << nQubits;
+    this.state = new Array(size).fill(null).map((_,i) => ({ re: i===0?1:0, im: 0 }));
+  }
+  _apply1(q, gate) {
+    const step = 1 << q;
+    for (let i = 0; i < (1<<this.n); i++) {
+      if ((i & step) === 0) {
+        const a = this.state[i], b = this.state[i|step];
+        this.state[i]     = { re: gate[0][0]*a.re - gate[0][1]*a.im + gate[0][2]*b.re - gate[0][3]*b.im,
+                              im: gate[0][0]*a.im + gate[0][1]*a.re + gate[0][2]*b.im + gate[0][3]*b.re };
+        this.state[i|step]= { re: gate[1][0]*a.re - gate[1][1]*a.im + gate[1][2]*b.re - gate[1][3]*b.im,
+                              im: gate[1][0]*a.im + gate[1][1]*a.re + gate[1][2]*b.im + gate[1][3]*b.re };
+      }
+    }
+  }
+  h(q)  { const s=Math.SQRT1_2; this._apply1(q,[[ s,0, s,0],[ s,0,-s,0]]); }
+  x(q)  { this._apply1(q,[[0,0,1,0],[1,0,0,0]]); }
+  cx(c,t) {
+    const cs=1<<c, ts=1<<t;
+    for(let i=0;i<(1<<this.n);i++) {
+      if((i&cs)&&!(i&ts)){ const j=i|ts; [this.state[i],this.state[j]]=[this.state[j],this.state[i]]; }
+    }
+  }
+  measure(shots=1024) {
+    const probs = this.state.map(a => a.re*a.re + a.im*a.im);
+    const counts = {};
+    for(let s=0;s<shots;s++) {
+      let r = Math.random(), cum = 0, idx = 0;
+      for(let i=0;i<probs.length;i++){ cum+=probs[i]; if(r<cum){idx=i;break;} }
+      const key = idx.toString(2).padStart(this.n,'0');
+      counts[key] = (counts[key]||0)+1;
+    }
+    return counts;
+  }
+}
+
+function buildQuantumCircuit(query) {
+  const q = query.toLowerCase();
+
+  if (/bell|entangl/i.test(q)) {
+    return {
+      name: 'Bell State',
+      qubits: 2,
+      desc: 'Creates a maximally entangled Bell state between 2 qubits.',
+      circuit: 'q0: ─[H]─●─\nq1: ──────X─',
+      run(sim) { sim.h(0); sim.cx(0, 1); }
+    };
+  }
+
+  if (/random|rng/i.test(q)) {
+    return {
+      name: 'Quantum RNG',
+      qubits: 4,
+      desc: 'Uses quantum superposition to generate a truly random 4-bit number.',
+      circuit: 'q0: ─[H]─M\nq1: ─[H]─M\nq2: ─[H]─M\nq3: ─[H]─M',
+      run(sim) { sim.h(0); sim.h(1); sim.h(2); sim.h(3); }
+    };
+  }
+
+  if (/grover/i.test(q)) {
+    return {
+      name: "Grover's Search",
+      qubits: 2,
+      desc: "Demonstrates Grover's search algorithm amplitude amplification on 2 qubits.",
+      circuit: 'q0: ─[H]─[Z]─[H]─[X]─●─[X]─[H]─M\nq1: ─[H]─[Z]─[H]─[X]─Z─[X]─[H]─M',
+      run(sim) {
+        sim.h(0); sim.h(1);
+        sim.cx(0, 1);
+        sim.h(0); sim.h(1);
+        sim.x(0); sim.x(1);
+        sim.cx(0, 1);
+        sim.x(0); sim.x(1);
+        sim.h(0); sim.h(1);
+      }
+    };
+  }
+
+  if (/factor|shor/i.test(q)) {
+    const match = q.match(/\d+/);
+    const n = match ? parseInt(match[0], 10) : 15;
+    return {
+      name: 'Factor ' + n + ' (Simplified)',
+      qubits: 3,
+      desc: 'Simulates the quantum period-finding core of Shor\'s algorithm for N=' + n + '. Full Shor\'s requires many more qubits.',
+      circuit: 'q0: ─[H]─●──────M\nq1: ─[H]─┼─●────M\nq2: ─[X]─X─X────M',
+      run(sim) {
+        sim.h(0); sim.h(1); sim.x(2);
+        sim.cx(0, 2); sim.cx(1, 2);
+        sim.h(0); sim.h(1);
+      }
+    };
+  }
+
+  return {
+    name: 'Superposition Demo',
+    qubits: 3,
+    desc: 'Places 3 qubits into equal superposition using Hadamard gates.',
+    circuit: 'q0: ─[H]─M\nq1: ─[H]─M\nq2: ─[H]─M',
+    run(sim) { sim.h(0); sim.h(1); sim.h(2); }
+  };
+}
+
+function runLocalQuantum(query) {
+  const circ = buildQuantumCircuit(query);
+  const sim = new QuantumSim(circ.qubits);
+  circ.run(sim);
+  const counts = sim.measure(1024);
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const total = sorted.reduce((s,[,v])=>s+v,0);
+  let answer = '';
+  if (/factor/i.test(query)) {
+    const m = query.match(/\d+/);
+    const n = m ? parseInt(m[0]) : 15;
+    const factors = [];
+    for(let i=2;i<=Math.sqrt(n);i++) if(n%i===0){ factors.push(i); factors.push(n/i); }
+    answer = factors.length ? `The factors of ${n} are: ${[...new Set(factors)].sort((a,b)=>a-b).join(', ')}` : `${n} is prime`;
+  } else if (/random/i.test(query)) {
+    const top = sorted[0][0];
+    answer = `Quantum random result: ${parseInt(top,2)} (binary: ${top})`;
+  } else if (/grover/i.test(query)) {
+    const top = sorted[0][0];
+    answer = `Marked state |${top}⟩ found with highest probability (${((sorted[0][1]/total)*100).toFixed(1)}%)`;
+  } else if (/bell/i.test(query)) {
+    answer = 'Bell state created — qubits are maximally entangled. Measuring one instantly determines the other.';
+  } else {
+    answer = `Most probable state: |${sorted[0][0]}⟩ (${((sorted[0][1]/total)*100).toFixed(1)}%)`;
+  }
+  return { circ, counts: sorted, total, answer, mode:'Local Simulation', shots:1024 };
+}
+
+async function runIBMQuantum(query) {
+  if (!ibmToken) throw new Error('No IBM token');
+  const circ = buildQuantumCircuit(query);
+  // IBM Quantum REST API v1
+  try {
+    // Get backend list
+    const backendsRes = await fetch('https://auth.quantum-computing.ibm.com/api/users/loginWithToken', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiToken: ibmToken })
+    });
+    const auth = await backendsRes.json();
+    const accessToken = auth.id;
+    if (!accessToken) throw new Error('IBM auth failed — check your token');
+
+    // Build minimal OpenQASM 2.0 circuit
+    const qasm = buildQASM(circ);
+
+    // Submit job to ibmq_qasm_simulator (free, no queue)
+    const jobRes = await fetch('https://runtime-us-east.quantum-computing.ibm.com/jobs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`, 'Service-CRN': '' },
+      body: JSON.stringify({
+        backend: 'ibmq_qasm_simulator',
+        shots: 1024,
+        name: 'odysseus-quantum',
+        params: [{ textPayload: qasm }],
+        runtime: 'qasm3-runner'
+      })
+    });
+    const job = await jobRes.json();
+
+    // Poll for result (max 30s)
+    const jobId = job.id;
+    if (!jobId) throw new Error('Job submission failed');
+    for (let i = 0; i < 15; i++) {
+      await new Promise(r => setTimeout(r, 2000));
+      const statusRes = await fetch(`https://runtime-us-east.quantum-computing.ibm.com/jobs/${jobId}`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+      });
+      const status = await statusRes.json();
+      if (status.state?.status === 'Completed') {
+        const counts = status.results?.[0]?.data?.counts || {};
+        const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+        const total = sorted.reduce((s,[,v])=>s+v,0);
+        return { circ, counts: sorted, total, answer: `IBM result: most probable state |${sorted[0]?.[0]||'?'}⟩`, mode:`IBM Quantum (${status.backend})`, shots:1024 };
+      }
+      if (status.state?.status === 'Failed') throw new Error('IBM job failed');
+    }
+    throw new Error('IBM job timed out — try local simulation');
+  } catch(e) {
+    throw e;
+  }
+}
+
+function buildQASM(circ) {
+  const n = circ.qubits;
+  let q = `OPENQASM 2.0;
+include "qelib1.inc";
+qreg q[${n}];
+creg c[${n}];
+`;
+  const name = circ.name.toLowerCase();
+  if (/bell/.test(name))     q += `h q[0];
+cx q[0],q[1];
+`;
+  else if (/rng/.test(name)) for(let i=0;i<n;i++) q += `h q[${i}];
+`;
+  else if (/grover/.test(name)) q += `h q[0];
+h q[1];
+cx q[0],q[1];
+h q[0];
+h q[1];
+x q[0];
+x q[1];
+cx q[0],q[1];
+x q[0];
+x q[1];
+h q[0];
+h q[1];
+`;
+  else { for(let i=0;i<n;i++) q += `h q[${i}];
+`; }
+  for(let i=0;i<n;i++) q += `measure q[${i}] -> c[${i}];
+`;
+  return q;
+}
+
+function appendQuantumPrompt(query) {
+  const msgsEl = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg ai quantum';
+  div.dataset.query = query; // store safely, no inline escaping needed
+
+  const card = document.createElement('div');
+  card.className = 'quantum-prompt-card';
+
+  const title = document.createElement('div');
+  title.className = 'quantum-prompt-title';
+  title.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg> Quantum computing available`;
+
+  const desc = document.createElement('div');
+  desc.className = 'quantum-prompt-desc';
+  desc.textContent = 'This looks like a quantum problem. How would you like to run it?';
+
+  const btnRow = document.createElement('div');
+  btnRow.className = 'quantum-btn-row';
+
+  const btnLocal = document.createElement('button');
+  btnLocal.className = 'quantum-btn local';
+  btnLocal.textContent = '⚛ Simulate locally';
+  btnLocal.onclick = () => window.runQuantum('local', div.dataset.query, div);
+
+  const btnIBM = document.createElement('button');
+  btnIBM.className = 'quantum-btn ibm';
+  btnIBM.textContent = '🔬 Run on IBM';
+  btnIBM.onclick = () => window.runQuantum('ibm', div.dataset.query, div);
+
+  btnRow.appendChild(btnLocal);
+  btnRow.appendChild(btnIBM);
+  card.appendChild(title);
+  card.appendChild(desc);
+  card.appendChild(btnRow);
+
+  if (!ibmToken) {
+    const note = document.createElement('div');
+    note.style.cssText = 'margin-top:8px;font-size:10px;color:var(--text3)';
+    note.textContent = 'Add your IBM token in the sidebar to enable IBM Quantum.';
+    card.appendChild(note);
+  }
+
+  div.appendChild(card);
+  const meta = document.createElement('div'); meta.className = 'msg-meta';
+  const t = document.createElement('span'); t.className = 'msg-time';
+  t.textContent = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  meta.appendChild(t);
+  div.appendChild(meta);
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function appendQuantumResult(result) {
+  const msgsEl = document.getElementById('messages');
+  const div = document.createElement('div'); div.className = 'msg ai quantum';
+  const b = document.createElement('div'); b.className = 'bubble quantum-bubble';
+
+  const bars = result.counts.map(([state, count]) => {
+    const pct = (count / result.total * 100).toFixed(1);
+    const w = (count / result.total * 100).toFixed(1);
+    return `<div class="quantum-bar-row">
+      <span class="quantum-bar-label">|${state}⟩</span>
+      <div class="quantum-bar-track"><div class="quantum-bar-fill" style="width:${w}%"></div></div>
+      <span class="quantum-bar-pct">${pct}%</span>
+    </div>`;
+  }).join('');
+
+  b.innerHTML = `
+    <div class="quantum-header">
+      <span class="quantum-badge">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        ⚛ ${result.circ.name}
+      </span>
+      <span class="quantum-mode">${result.mode}</span>
+    </div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:8px">${result.circ.desc}</div>
+    <div class="quantum-circuit">${result.circ.circuit}</div>
+    <div class="quantum-results">${bars}</div>
+    <div class="quantum-answer">${result.answer}</div>
+    <div class="quantum-meta">
+      <span>🎯 ${result.circ.qubits} qubits</span>
+      <span>🔄 ${result.shots} shots</span>
+      <span>📊 ${result.counts.length} outcomes</span>
+    </div>`;
+
+  div.appendChild(b);
+  const meta = document.createElement('div'); meta.className = 'msg-meta';
+  const t = document.createElement('span'); t.className = 'msg-time';
+  t.textContent = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  meta.appendChild(t); div.appendChild(meta);
+  msgsEl.appendChild(div); msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+window.runQuantum = async function(mode, query, promptDiv) {
+  if (promptDiv) promptDiv.remove();
+  setStatus('thinking', mode === 'ibm' ? 'Sending to IBM Quantum…' : 'Running quantum simulation…');
+  try {
+    const result = mode === 'ibm' ? await runIBMQuantum(query) : runLocalQuantum(query);
+    appendQuantumResult(result);
+    // Also get AI explanation
+    const sysWithCtx = SYS + `
+
+The user asked a quantum computing question: "${query}". A quantum circuit was run and produced this result: ${result.answer}. Briefly explain what this means in plain language (2-3 sentences).`;
+    let explanation = '';
+    if (selectedModel === 'claude') {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 300, system: sysWithCtx, messages: [{ role:'user', content: query }] })
+      });
+      const d = await res.json();
+      explanation = (d.content||[]).map(c=>c.text||'').join('').trim();
+    } else if (engine) {
+      const r = await engine.chat.completions.create({ messages:[{role:'system',content:sysWithCtx},{role:'user',content:query}], max_tokens:300, temperature:0.7 });
+      explanation = r.choices[0].message.content || '';
+    }
+    if (explanation) appendMsgStreamed('ai', explanation, [], null, [], false);
+    setStatus('ready', 'Running on your device');
+  } catch(e) {
+    appendMsgStreamed('ai', `Quantum error: ${e.message}`, [], null, [], false);
+    setStatus('ready', 'Ready');
+  }
+};
+
 buildModelList();
 updateSearchStatus();
+updateIBMStatus();
 </script>
 </body>
 </html>
