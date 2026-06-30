@@ -248,6 +248,7 @@
         Load model
       </button>
       <div class="info-box">Models download once and run entirely on your device via WebGPU. No data leaves your machine.</div>
+      <button onclick="clearChatHistory()" style="width:100%;padding:7px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;margin-top:8px">Clear chat history</button>
 
       <div style="margin-top:14px">
         <div class="cl-label">Web search</div>
@@ -323,7 +324,7 @@
         <canvas id="brain-canvas"></canvas>
         <div class="brain-empty" id="brain-empty">
           <svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.44-4.14Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.44-4.14Z"/></svg>
-          <p>Chat with Odysseus and your knowledge graph will appear here</p>
+          <p>Chat with Hatsune Miku and your knowledge graph will appear here</p>
         </div>
         <div class="node-tip" id="node-tip"></div>
       </div>
@@ -363,6 +364,41 @@ const COLORS = {
 let engine = null, selectedModel = MODELS[0].id, nodeId = 0;
 const nodes = [], edges = [], history = [];
 let rafId = null;
+
+function saveState() {
+  try {
+    localStorage.setItem('miku_history', JSON.stringify(history));
+    localStorage.setItem('miku_nodes', JSON.stringify(nodes));
+    localStorage.setItem('miku_edges', JSON.stringify(edges));
+    localStorage.setItem('miku_nodeId', String(nodeId));
+    localStorage.setItem('miku_selectedModel', selectedModel);
+  } catch(_) {}
+}
+
+function loadState() {
+  try {
+    const h = localStorage.getItem('miku_history');
+    const n = localStorage.getItem('miku_nodes');
+    const e = localStorage.getItem('miku_edges');
+    const id = localStorage.getItem('miku_nodeId');
+    const m = localStorage.getItem('miku_selectedModel');
+    if (h) history.push(...JSON.parse(h));
+    if (n) nodes.push(...JSON.parse(n));
+    if (e) edges.push(...JSON.parse(e));
+    if (id) nodeId = parseInt(id, 10) || 0;
+    if (m) selectedModel = m;
+  } catch(_) {}
+}
+
+window.clearChatHistory = function() {
+  if (!confirm('Clear all chat history and knowledge graph? This cannot be undone.')) return;
+  localStorage.removeItem('miku_history');
+  localStorage.removeItem('miku_nodes');
+  localStorage.removeItem('miku_edges');
+  localStorage.removeItem('miku_nodeId');
+  location.reload();
+};
+;
 
 const SYS = `You are Hatsune Miku, a knowledgeable and articulate AI assistant. You respond like a thoughtful expert — clear, well-structured, and thorough when the topic warrants it.
 
@@ -535,6 +571,7 @@ async function callModel(userMsg) {
   }
 
   history.push({ role: 'assistant', content: replyText });
+  saveState();
   const tags = [];
   callKG(`User: ${userMsg}\nAssistant: ${replyText}`).then(raw => parseAndIngestKG(raw, tags));
   return { text: replyText, tags, sources, searched };
@@ -687,6 +724,7 @@ function addEdge(a, b, rel) {
 }
 
 function updateBrainStats() {
+  saveState();
   document.getElementById('stat-nodes').textContent = nodes.length;
   document.getElementById('stat-edges').textContent = edges.length;
   document.getElementById('brain-sub').textContent = nodes.length
@@ -1044,7 +1082,7 @@ async function runIBMQuantum(query) {
       body: JSON.stringify({
         backend: 'ibmq_qasm_simulator',
         shots: 1024,
-        name: 'odysseus-quantum',
+        name: 'hatsuneMiku-quantum',
         params: [{ textPayload: qasm }],
         runtime: 'qasm3-runner'
       })
@@ -1231,9 +1269,30 @@ The user asked a quantum computing question: "${query}". A quantum circuit was r
   }
 };
 
+loadState();
 buildModelList();
 updateSearchStatus();
 updateIBMStatus();
+restoreChatUI();
+
+function restoreChatUI() {
+  if (history.length === 0) return;
+
+  document.getElementById('messages').innerHTML = '';
+  history.forEach(m => {
+    if (m.role === 'user') appendMsgStreamed('user', m.content);
+    else appendMsgStreamed('ai', m.content, [], null, [], false);
+  });
+
+  if (selectedModel) {
+    document.querySelectorAll('.model-card').forEach(c => {
+      c.classList.toggle('selected', c.dataset.id === selectedModel);
+    });
+    loadModel();
+  }
+
+  if (nodes.length) updateBrainStats();
+}
 </script>
 </body>
 </html>
