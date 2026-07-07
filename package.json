@@ -24,20 +24,20 @@
     "files": [
       "main.js",
       "index.html",
-      "assets/**"
+      "assets/icon.jpeg"
     ],
     "mac": {
       "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
       "category": "public.app-category.productivity",
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.jpeg"
     },
     "win": {
       "target": [{ "target": "nsis", "arch": ["x64"] }],
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.jpeg"
     },
     "linux": {
       "target": [{ "target": "AppImage", "arch": ["x64"] }],
-      "icon": "assets/icon.png",
+      "icon": "assets/icon.jpeg",
       "category": "Office"
     },
     "nsis": {
