@@ -43,7 +43,7 @@
   #app { display: flex; height: 100vh; }
 
   /* ICON RAIL */
-  #sidebar { display: flex; flex-direction: column; align-items: center; background: var(--bg2); border-right: 0.5px solid var(--border); overflow: hidden; padding-top: 44px; gap: 2px; -webkit-app-region: drag; flex-shrink: 0; }
+  #sidebar { display: flex; flex-direction: column; align-items: center; width: 54px; background: var(--bg2); border-right: 0.5px solid var(--border); overflow: hidden; padding-top: 44px; gap: 2px; -webkit-app-region: drag; flex-shrink: 0; }
   .rail-btn { width: 40px; height: 40px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: transparent; color: var(--text3); transition: all 0.15s; position: relative; -webkit-app-region: no-drag; flex-shrink: 0; }
   .rail-btn:hover { background: var(--bg3); color: var(--text2); }
   .rail-btn.active { background: var(--bg3); color: var(--accent-light); }
@@ -54,48 +54,68 @@
   .rail-tooltip { position: fixed; left: 62px; background: var(--bg3); color: var(--text); font-size: 12px; padding: 4px 10px; border-radius: var(--radius); border: 0.5px solid var(--border2); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.1s; z-index: 100; }
   .rail-btn:hover .rail-tooltip { opacity: 1; }
 
-  /* PANEL DRAWER */
-  #panel-drawer { width: 240px; background: var(--bg2); border-right: 0.5px solid var(--border); display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; }
-  #panel-drawer.collapsed { width: 0; border: none; }
-  .drawer-header { padding: 16px 14px 10px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; }
-  .drawer-title { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0.07em; text-transform: uppercase; }
-  .drawer-body { flex: 1; overflow-y: auto; padding: 10px; }
 
-  /* MODEL CARDS */
-  .cl-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.07em; text-transform: uppercase; padding: 4px 6px 8px; }
-  .model-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 6px; cursor: pointer; transition: border-color 0.15s; }
-  .model-card:hover { border-color: var(--border2); }
-  .model-card.selected { border-color: var(--accent-light); }
-  .model-card-name { font-size: 13px; font-weight: 500; color: var(--text); }
-  .model-card-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
-  .model-card-size { display: inline-block; font-size: 10px; background: var(--purple-pale); color: var(--purple); border-radius: 99px; padding: 2px 7px; margin-top: 5px; font-weight: 500; }
-  #load-btn { width: 100%; padding: 9px; font-size: 13px; font-weight: 500; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--accent); color: #fff; cursor: pointer; margin-top: 8px; transition: opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+  /* MODELS PANEL */
+  #models-panel { display: none; flex-direction: column; flex: 1; overflow: hidden; min-width: 0; }
+  .models-search { padding: 12px 18px 8px; flex-shrink: 0; }
+  .models-search input { width: 100%; padding: 8px 14px; font-size: 13px; border-radius: 99px; border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text); outline: none; font-family: inherit; }
+  .models-search input:focus { border-color: var(--accent-light); }
+  .models-body { flex: 1; overflow-y: auto; padding: 12px 18px; }
+  .models-category { margin-bottom: 22px; }
+  .models-category-title { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); }
+  .models-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+  .model-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; cursor: pointer; transition: all 0.15s; }
+  .model-card:hover { border-color: var(--border2); background: var(--bg3); }
+  .model-card.selected { border-color: var(--accent-light); background: rgba(134,206,203,0.06); }
+  .model-card.active-model { border-color: var(--accent); }
+  .model-card-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .model-card-desc { font-size: 11px; color: var(--text3); line-height: 1.45; }
+  .model-card-footer { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .model-card-size { font-size: 10px; background: var(--accent-pale); color: var(--accent-light); border-radius: 99px; padding: 2px 8px; font-weight: 500; }
+  .model-card-api { font-size: 10px; background: var(--pink-pale); color: var(--pink); border-radius: 99px; padding: 2px 8px; font-weight: 500; }
+  .model-card-active-badge { font-size: 10px; background: rgba(19,122,127,0.2); color: var(--accent-light); border-radius: 99px; padding: 2px 8px; font-weight: 500; margin-left: auto; }
+  .model-card-vram { font-size: 10px; color: var(--text3); }
+  .models-footer { padding: 12px 18px; border-top: 0.5px solid var(--border); flex-shrink: 0; display: flex; gap: 10px; align-items: center; }
+  #load-btn { flex: 1; padding: 9px 14px; font-size: 13px; font-weight: 500; border-radius: var(--radius); border: none; background: var(--accent); color: #fff; cursor: pointer; transition: opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
   #load-btn:hover { opacity: 0.88; }
   #load-btn:disabled { opacity: 0.45; cursor: not-allowed; }
   #load-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .info-box { margin-top: 10px; padding: 9px 10px; background: var(--bg3); border-radius: var(--radius); font-size: 11px; color: var(--text3); line-height: 1.55; }
+  .info-box { padding: 9px 10px; background: var(--bg3); border-radius: var(--radius); font-size: 11px; color: var(--text3); line-height: 1.55; }
+  .cl-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.07em; text-transform: uppercase; padding: 4px 6px 8px; }
 
-  /* SETTINGS */
-  .setting-group { margin-bottom: 18px; }
-  .setting-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 0.07em; text-transform: uppercase; padding: 0 0 8px; display: flex; align-items: center; gap: 6px; }
-  .setting-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-  .setting-input { width: 100%; padding: 8px 10px; font-size: 12px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg); color: var(--text); outline: none; font-family: inherit; margin-bottom: 6px; }
+  /* SETTINGS OVERLAY */
+  #settings-overlay { display: none; position: fixed; inset: 0; z-index: 200; align-items: center; justify-content: center; }
+  #settings-overlay.open { display: flex; }
+  .settings-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); }
+  .settings-modal { position: relative; z-index: 1; background: var(--bg2); border: 0.5px solid var(--border2); border-radius: var(--radius-lg); width: 500px; max-width: calc(100vw - 40px); max-height: calc(100vh - 80px); display: flex; flex-direction: column; box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+  .settings-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; }
+  .settings-modal-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .settings-close { width: 28px; height: 28px; border-radius: 6px; border: none; background: var(--bg3); color: var(--text3); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.15s; }
+  .settings-close:hover { background: var(--bg); color: var(--text); }
+  .settings-body { flex: 1; overflow-y: auto; padding: 20px 22px; display: flex; flex-direction: column; gap: 18px; }
+  .setting-group { display: flex; flex-direction: column; gap: 8px; }
+  .setting-group-label { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+  .setting-dot { width: 7px; height: 7px; border-radius: 50%; background: #7a8a93; flex-shrink: 0; transition: background 0.3s; }
+  .setting-input { width: 100%; padding: 9px 12px; font-size: 13px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg); color: var(--text); outline: none; font-family: inherit; transition: border-color 0.15s; }
   .setting-input:focus { border-color: var(--accent-light); }
-  .setting-btn { width: 100%; padding: 7px; font-size: 12px; font-weight: 500; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg3); color: var(--text2); cursor: pointer; transition: background 0.15s; }
-  .setting-btn:hover { background: var(--bg); }
-  .setting-hint { margin-top: 5px; font-size: 10px; color: var(--text3); line-height: 1.5; }
-  .danger-btn { width: 100%; padding: 7px; font-size: 12px; border-radius: var(--radius); border: 0.5px solid rgba(225,40,133,0.3); background: transparent; color: var(--pink); cursor: pointer; transition: background 0.15s; margin-top: 6px; }
+  .setting-btn { padding: 7px 14px; font-size: 12px; font-weight: 500; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg3); color: var(--text2); cursor: pointer; transition: all 0.15s; align-self: flex-start; white-space: nowrap; }
+  .setting-btn:hover { background: var(--bg); color: var(--text); }
+  .setting-row { display: flex; gap: 8px; align-items: center; }
+  .setting-hint { font-size: 11px; color: var(--text3); line-height: 1.5; }
+  .settings-divider { height: 0.5px; background: var(--border); }
+  .danger-btn { padding: 7px 14px; font-size: 12px; font-weight: 500; border-radius: var(--radius); border: 0.5px solid rgba(225,40,133,0.3); background: transparent; color: var(--pink); cursor: pointer; transition: background 0.15s; align-self: flex-start; }
   .danger-btn:hover { background: var(--pink-pale); }
 
   /* BRAIN STATS */
-  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
-  .stat-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 10px 12px; }
-  .stat-label { font-size: 10px; color: var(--text3); margin-bottom: 3px; }
-  .stat-val { font-size: 22px; font-weight: 500; color: var(--text); }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .stat-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 8px 12px; }
+  .stat-label { font-size: 10px; color: var(--text3); margin-bottom: 2px; }
+  .stat-val { font-size: 18px; font-weight: 500; color: var(--text); }
 
   /* MAIN PANEL */
-  #main { display: flex; flex-direction: column; overflow: hidden; }
-  #chat-panel, #brain-panel { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+  #main { display: flex; flex-direction: column; overflow: hidden; flex: 1; min-width: 0; }
+  #chat-panel, #brain-panel, #models-panel { flex-direction: column; flex: 1; overflow: hidden; min-width: 0; }
   .panel-header { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; -webkit-app-region: drag; }
   .ph-title { font-size: 14px; font-weight: 500; color: var(--text); }
   .ph-sub { font-size: 12px; color: var(--text3); }
@@ -238,116 +258,36 @@
 
   <!-- ICON RAIL -->
   <div id="sidebar">
-    <!-- Chat -->
     <button class="rail-btn active" id="rail-chat" onclick="switchView('chat')" title="Chat">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span class="rail-tooltip">Chat</span>
     </button>
-    <!-- Brain -->
     <button class="rail-btn" id="rail-brain" onclick="switchView('brain')" title="Brain">
       <svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.44-4.14Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.44-4.14Z"/></svg>
       <div class="rail-badge" id="node-badge"></div>
-      <span class="rail-tooltip">Brain</span>
     </button>
-    <!-- Models -->
     <button class="rail-btn" id="rail-models" onclick="switchView('models')" title="Models">
       <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      <span class="rail-tooltip">Models</span>
     </button>
     <div class="rail-spacer"></div>
     <div class="rail-divider"></div>
-    <!-- Settings -->
-    <button class="rail-btn" id="rail-settings" onclick="switchView('settings')" title="Settings" style="margin-bottom:8px">
+    <button class="rail-btn" id="rail-settings" onclick="openSettings()" title="Settings" style="margin-bottom:8px">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      <span class="rail-tooltip">Settings</span>
     </button>
   </div>
 
-  <!-- PANEL DRAWER -->
-  <div id="panel-drawer">
-
-    <!-- MODELS DRAWER -->
-    <div id="drawer-models" style="display:none;flex-direction:column;flex:1;overflow:hidden">
-      <div class="drawer-header"><div class="drawer-title">Models</div></div>
-      <div class="drawer-body">
-        <div class="cl-label">Available</div>
-        <div id="model-list"></div>
-        <button id="load-btn" onclick="loadModel()">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Load model
-        </button>
-        <div class="info-box">Models download once and run via WebGPU — no data leaves your machine.</div>
-      </div>
-    </div>
-
-    <!-- BRAIN DRAWER -->
-    <div id="drawer-brain" style="display:none;flex-direction:column;flex:1;overflow:hidden">
-      <div class="drawer-header"><div class="drawer-title">Brain</div></div>
-      <div class="drawer-body">
-        <div class="stat-grid">
-          <div class="stat-card"><div class="stat-label">Nodes</div><div class="stat-val" id="stat-nodes">0</div></div>
-          <div class="stat-card"><div class="stat-label">Links</div><div class="stat-val" id="stat-edges">0</div></div>
-        </div>
-        <div id="type-breakdown"></div>
-      </div>
-    </div>
-
-    <!-- SETTINGS DRAWER -->
-    <div id="drawer-settings" style="display:none;flex-direction:column;flex:1;overflow:hidden">
-      <div class="drawer-header"><div class="drawer-title">Settings</div></div>
-      <div class="drawer-body">
-
-        <div class="setting-group">
-          <div class="setting-label">
-            <div class="setting-dot" id="claude-dot" style="background:#7a8a93"></div>
-            Claude API
-          </div>
-          <input id="claude-key" class="setting-input" type="password" placeholder="sk-ant-..."/>
-          <button class="setting-btn" onclick="saveClaudeKey()">Save key</button>
-          <div class="setting-hint">Get a key at console.anthropic.com</div>
-        </div>
-
-        <div class="setting-group">
-          <div class="setting-label">
-            <div class="setting-dot" id="search-dot" style="background:#7a8a93"></div>
-            Tavily Web Search
-          </div>
-          <input id="tavily-key" class="setting-input" type="password" placeholder="tvly-..."/>
-          <button class="setting-btn" onclick="saveTavilyKey()">Save key</button>
-          <div class="setting-hint">Free at tavily.com · 1,000 searches/month. Searches automatically when needed.</div>
-        </div>
-
-        <div class="setting-group">
-          <div class="setting-label">
-            <div class="setting-dot" id="ibm-dot" style="background:#7a8a93"></div>
-            IBM Quantum
-          </div>
-          <input id="ibm-token" class="setting-input" type="password" placeholder="IBM Quantum token"/>
-          <button class="setting-btn" onclick="saveIBMToken()">Save token</button>
-          <div class="setting-hint">Free at quantum.ibm.com · token under Account Settings.</div>
-        </div>
-
-        <div class="setting-group">
-          <div class="setting-label">Data</div>
-          <button class="danger-btn" onclick="clearChatHistory()">Clear chat history &amp; graph</button>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
-  <!-- MAIN CONTENT -->
+  <!-- MAIN CONTENT — fills all remaining space -->
   <div id="main">
-    <div id="chat-panel">
-      <div class="status-bar">
+
+    <!-- CHAT PANEL -->
+    <div id="chat-panel" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="status-bar" style="-webkit-app-region:drag">
         <div class="sdot idle" id="sdot"></div>
         <span id="stext">No model loaded — open Models to get started</span>
       </div>
       <div id="progress-wrap"><div id="progress-bar"></div></div>
       <div id="messages">
         <div class="msg ai">
-          <div class="bubble">Hi! I'm Hatsune Miku. Open the <strong>Models</strong> panel on the left to pick and load a model — it runs entirely on your device.</div>
+          <div class="bubble">Hi! I'm Hatsune Miku. Click the <strong>monitor icon</strong> in the sidebar to browse and load a model — everything runs on your device.</div>
           <div class="msg-meta"><span class="msg-time">now</span></div>
         </div>
       </div>
@@ -359,20 +299,28 @@
       </div>
     </div>
 
-    <div id="brain-panel" style="display:none">
+    <!-- BRAIN PANEL -->
+    <div id="brain-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden">
       <div class="panel-header" style="-webkit-app-region:drag">
         <svg width="16" height="16" viewBox="0 0 24 24" stroke="var(--accent-light)" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.44-4.14Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.44-4.14Z"/></svg>
         <div>
-          <div class="ph-title">Knowledge graph</div>
+          <div class="ph-title">Knowledge Graph</div>
           <div class="ph-sub" id="brain-sub">No entities yet</div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;-webkit-app-region:no-drag">
+          <div class="stat-grid" style="margin:0">
+            <div class="stat-card"><div class="stat-label">Nodes</div><div class="stat-val" id="stat-nodes">0</div></div>
+            <div class="stat-card"><div class="stat-label">Links</div><div class="stat-val" id="stat-edges">0</div></div>
+          </div>
         </div>
       </div>
       <div id="brain-canvas-wrap">
         <canvas id="brain-canvas"></canvas>
         <div class="brain-empty" id="brain-empty">
           <svg viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.44-4.14Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.44-4.14Z"/></svg>
-          <p></p>
+          <p>Chat with Hatsune Miku and your knowledge graph will appear here</p>
         </div>
+        <div id="type-breakdown" style="position:absolute;bottom:50px;right:14px;display:flex;flex-direction:column;gap:4px;pointer-events:none"></div>
         <div class="node-tip" id="node-tip"></div>
       </div>
       <div class="brain-legend">
@@ -383,6 +331,82 @@
         <div class="leg"><div class="leg-dot" style="background:#FAC775"></div>time</div>
         <div class="leg"><div class="leg-dot" style="background:#B4B2A9"></div>other</div>
       </div>
+    </div>
+
+    <!-- MODELS PANEL — full window -->
+    <div id="models-panel" style="display:none">
+      <div class="panel-header" style="-webkit-app-region:drag">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <div>
+          <div class="ph-title">Models</div>
+          <div class="ph-sub">Browse and load on-device models · runs entirely in your browser via WebGPU</div>
+        </div>
+      </div>
+      <div class="models-search" style="-webkit-app-region:no-drag">
+        <input type="text" id="model-search" placeholder="Search models by name, size, or description…" oninput="filterModels(this.value)"/>
+      </div>
+      <div class="models-body" id="model-list" style="-webkit-app-region:no-drag"></div>
+      <div class="models-footer" style="-webkit-app-region:no-drag">
+        <button id="load-btn" onclick="loadModel()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Load selected model
+        </button>
+        <div class="info-box" style="margin:0;flex:1">Models download once and are cached — no data leaves your device after that.</div>
+      </div>
+    </div>
+
+  </div><!-- #main -->
+</div><!-- #app -->
+
+<!-- SETTINGS OVERLAY -->
+<div id="settings-overlay">
+  <div class="settings-backdrop" onclick="closeSettings()"></div>
+  <div class="settings-modal">
+    <div class="settings-modal-header">
+      <span class="settings-modal-title">⚙ Settings</span>
+      <button class="settings-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="settings-body">
+
+      <div class="setting-group">
+        <div class="setting-group-label"><div class="setting-dot" id="claude-dot"></div>Claude API Key</div>
+        <div class="setting-row">
+          <input id="claude-key" class="setting-input" type="password" placeholder="sk-ant-api03-..."/>
+          <button class="setting-btn" onclick="saveClaudeKey()">Save</button>
+        </div>
+        <div class="setting-hint">Get your key at console.anthropic.com — enables Claude in the model list.</div>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="setting-group">
+        <div class="setting-group-label"><div class="setting-dot" id="search-dot"></div>Tavily Web Search</div>
+        <div class="setting-row">
+          <input id="tavily-key" class="setting-input" type="password" placeholder="tvly-..."/>
+          <button class="setting-btn" onclick="saveTavilyKey()">Save</button>
+        </div>
+        <div class="setting-hint">Free at tavily.com · 1,000 searches/month. Miku searches the web automatically when your question needs current info.</div>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="setting-group">
+        <div class="setting-group-label"><div class="setting-dot" id="ibm-dot"></div>IBM Quantum Token</div>
+        <div class="setting-row">
+          <input id="ibm-token" class="setting-input" type="password" placeholder="IBM Quantum API token"/>
+          <button class="setting-btn" onclick="saveIBMToken()">Save</button>
+        </div>
+        <div class="setting-hint">Free at quantum.ibm.com — find your token under Account Settings.</div>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="setting-group">
+        <div class="setting-group-label">Data</div>
+        <button class="danger-btn" onclick="clearChatHistory()">Clear chat history &amp; knowledge graph</button>
+        <div class="setting-hint">Permanently wipes all saved messages and graph nodes.</div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -825,30 +849,13 @@ function updateBrainStats() {
 }
 
 window.switchView = function(v) {
-  // Rail buttons
   document.querySelectorAll('.rail-btn').forEach(b => b.classList.remove('active'));
-  const railBtn = document.getElementById('rail-' + v);
-  if (railBtn) railBtn.classList.add('active');
+  const rb = document.getElementById('rail-' + v);
+  if (rb) rb.classList.add('active');
 
-  // Main panels
-  document.getElementById('chat-panel').style.display  = v === 'chat'  ? 'flex' : 'none';
-  document.getElementById('brain-panel').style.display = v === 'brain' ? 'flex' : 'none';
-
-  // Drawer panels
-  const drawer = document.getElementById('panel-drawer');
-  const drawers = ['models', 'brain', 'settings'];
-  drawers.forEach(d => {
-    const el = document.getElementById('drawer-' + d);
-    if (el) el.style.display = 'none';
-  });
-
-  if (['models', 'brain', 'settings'].includes(v)) {
-    drawer.classList.remove('collapsed');
-    const el = document.getElementById('drawer-' + v);
-    if (el) el.style.display = 'flex';
-  } else {
-    drawer.classList.add('collapsed');
-  }
+  document.getElementById('chat-panel').style.display   = v === 'chat'   ? 'flex' : 'none';
+  document.getElementById('brain-panel').style.display  = v === 'brain'  ? 'flex' : 'none';
+  document.getElementById('models-panel').style.display = v === 'models' ? 'flex' : 'none';
 
   if (v === 'brain') {
     updateBrainStats();
@@ -857,6 +864,14 @@ window.switchView = function(v) {
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   }
 };
+
+window.openSettings = function() {
+  document.getElementById('settings-overlay').classList.add('open');
+};
+window.closeSettings = function() {
+  document.getElementById('settings-overlay').classList.remove('open');
+};
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSettings(); });
 
 function resizeCanvas() {
   const wrap = document.getElementById('brain-canvas-wrap');
