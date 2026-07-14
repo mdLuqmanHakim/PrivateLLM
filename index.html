@@ -414,14 +414,114 @@
 <script type="module">
 import { CreateMLCEngine } from "https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.73/+esm";
 
-const MODELS = [
-  { id: "claude",                                      name: "Claude (Anthropic)",   size: "API",    desc: "Powered by claude.ai · best quality", api: true },
-  { id: "Qwen2.5-7B-Instruct-q4f16_1-MLC",            name: "Qwen 3.5 9B",          size: "4.5 GB", desc: "Alibaba · #3 trending on LM Studio" },
-  { id: "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC",    name: "DeepSeek R1 8B",       size: "5.0 GB", desc: "DeepSeek · #4 trending · strong reasoning" },
-  { id: "gemma-2-2b-it-q4f16_1-MLC",                  name: "Gemma 2 2B",           size: "1.5 GB", desc: "Google · closest to Gemma 3/4 in WebLLM" },
-  { id: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",          name: "Qwen 2.5 1.5B",        size: "1.0 GB", desc: "Alibaba · fastest · low RAM" },
-  { id: "Llama-3.2-3B-Instruct-q4f32_1-MLC",          name: "Llama 3.2 3B",         size: "1.8 GB", desc: "Meta · balanced speed & quality" },
+const MODEL_CATALOG = [
+  {
+    category: "API",
+    models: [
+      { id: "claude", name: "Claude Sonnet 4", size: "API", vram: null, desc: "Anthropic · best quality · requires API key", api: true },
+    ]
+  },
+  {
+    category: "Llama (Meta)",
+    models: [
+      { id: "Llama-3.2-1B-Instruct-q4f16_1-MLC",     name: "Llama 3.2 1B",        size: "879 MB", vram: "879 MB",  desc: "Meta · ultra-fast · minimal RAM" },
+      { id: "Llama-3.2-1B-Instruct-q4f32_1-MLC",     name: "Llama 3.2 1B q32",    size: "1.1 GB", vram: "1.1 GB",  desc: "Meta · ultra-fast · higher precision" },
+      { id: "Llama-3.2-3B-Instruct-q4f16_1-MLC",     name: "Llama 3.2 3B",        size: "2.2 GB", vram: "2.2 GB",  desc: "Meta · fast · good quality" },
+      { id: "Llama-3.2-3B-Instruct-q4f32_1-MLC",     name: "Llama 3.2 3B q32",    size: "2.9 GB", vram: "2.9 GB",  desc: "Meta · fast · higher precision" },
+      { id: "Llama-3.1-8B-Instruct-q4f16_1-MLC-1k",  name: "Llama 3.1 8B (1k)",   size: "4.6 GB", vram: "4.6 GB",  desc: "Meta · capable · 1k context · lower VRAM" },
+      { id: "Llama-3.1-8B-Instruct-q4f16_1-MLC",     name: "Llama 3.1 8B",        size: "5.0 GB", vram: "5.0 GB",  desc: "Meta · capable · full 4k context" },
+      { id: "Llama-3.1-8B-Instruct-q4f32_1-MLC",     name: "Llama 3.1 8B q32",    size: "6.1 GB", vram: "6.1 GB",  desc: "Meta · high precision · needs 8+ GB VRAM" },
+    ]
+  },
+  {
+    category: "DeepSeek (Reasoning)",
+    models: [
+      { id: "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC",  name: "DeepSeek R1 Qwen 7B",     size: "5.1 GB", vram: "5.1 GB", desc: "DeepSeek · strong reasoning · chain-of-thought" },
+      { id: "DeepSeek-R1-Distill-Qwen-7B-q4f32_1-MLC",  name: "DeepSeek R1 Qwen 7B q32", size: "5.9 GB", vram: "5.9 GB", desc: "DeepSeek · high precision reasoning" },
+      { id: "DeepSeek-R1-Distill-Llama-8B-q4f16_1-MLC", name: "DeepSeek R1 Llama 8B",    size: "5.0 GB", vram: "5.0 GB", desc: "DeepSeek · Llama base · strong reasoning" },
+      { id: "DeepSeek-R1-Distill-Llama-8B-q4f32_1-MLC", name: "DeepSeek R1 Llama 8B q32",size: "6.1 GB", vram: "6.1 GB", desc: "DeepSeek · high precision · needs 8+ GB VRAM" },
+    ]
+  },
+  {
+    category: "Qwen 2.5 (Alibaba)",
+    models: [
+      { id: "Qwen2.5-0.5B-Instruct-q4f16_1-MLC",       name: "Qwen 2.5 0.5B",        size: "945 MB", vram: "945 MB", desc: "Alibaba · tiny · ultra-low RAM" },
+      { id: "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",       name: "Qwen 2.5 1.5B",        size: "1.6 GB", vram: "1.6 GB", desc: "Alibaba · fast · multilingual" },
+      { id: "Qwen2.5-3B-Instruct-q4f16_1-MLC",         name: "Qwen 2.5 3B",          size: "2.5 GB", vram: "2.5 GB", desc: "Alibaba · balanced · multilingual" },
+      { id: "Qwen2.5-7B-Instruct-q4f16_1-MLC",         name: "Qwen 2.5 7B",          size: "5.1 GB", vram: "5.1 GB", desc: "Alibaba · powerful · multilingual" },
+      { id: "Qwen2.5-Coder-0.5B-Instruct-q4f16_1-MLC", name: "Qwen 2.5 Coder 0.5B",  size: "945 MB", vram: "945 MB", desc: "Alibaba · coding · ultra-tiny" },
+      { id: "Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC", name: "Qwen 2.5 Coder 1.5B",  size: "1.6 GB", vram: "1.6 GB", desc: "Alibaba · coding specialist" },
+      { id: "Qwen2.5-Coder-3B-Instruct-q4f16_1-MLC",   name: "Qwen 2.5 Coder 3B",    size: "2.5 GB", vram: "2.5 GB", desc: "Alibaba · coding · balanced" },
+      { id: "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC",   name: "Qwen 2.5 Coder 7B",    size: "5.1 GB", vram: "5.1 GB", desc: "Alibaba · best coding model" },
+      { id: "Qwen2.5-Math-1.5B-Instruct-q4f16_1-MLC",  name: "Qwen 2.5 Math 1.5B",   size: "1.6 GB", vram: "1.6 GB", desc: "Alibaba · math specialist" },
+    ]
+  },
+  {
+    category: "Gemma 2 (Google)",
+    models: [
+      { id: "gemma-2-2b-it-q4f16_1-MLC-1k",  name: "Gemma 2 2B (1k)",    size: "1.5 GB", vram: "1.5 GB", desc: "Google · compact · 1k context" },
+      { id: "gemma-2-2b-it-q4f16_1-MLC",     name: "Gemma 2 2B",         size: "1.9 GB", vram: "1.9 GB", desc: "Google · efficient · 4k context" },
+      { id: "gemma-2-2b-it-q4f32_1-MLC",     name: "Gemma 2 2B q32",     size: "2.5 GB", vram: "2.5 GB", desc: "Google · high precision" },
+      { id: "gemma-2-2b-jpn-it-q4f16_1-MLC", name: "Gemma 2 2B Japanese", size: "1.9 GB", vram: "1.9 GB", desc: "Google · Japanese optimized" },
+      { id: "gemma-2-9b-it-q4f16_1-MLC",     name: "Gemma 2 9B",         size: "6.4 GB", vram: "6.4 GB", desc: "Google · powerful · needs 8+ GB VRAM" },
+    ]
+  },
+  {
+    category: "Phi 3.5 (Microsoft)",
+    models: [
+      { id: "Phi-3.5-mini-instruct-q4f16_1-MLC-1k", name: "Phi-3.5 Mini (1k)", size: "2.5 GB", vram: "2.5 GB", desc: "Microsoft · efficient · 1k context" },
+      { id: "Phi-3.5-mini-instruct-q4f16_1-MLC",    name: "Phi-3.5 Mini",      size: "3.7 GB", vram: "3.7 GB", desc: "Microsoft · strong reasoning · 4k context" },
+      { id: "Phi-3.5-mini-instruct-q4f32_1-MLC",    name: "Phi-3.5 Mini q32",  size: "5.5 GB", vram: "5.5 GB", desc: "Microsoft · highest precision" },
+      { id: "Phi-3.5-vision-instruct-q4f16_1-MLC",  name: "Phi-3.5 Vision",    size: "4.0 GB", vram: "4.0 GB", desc: "Microsoft · vision + text (VLM)" },
+    ]
+  },
+  {
+    category: "Mistral",
+    models: [
+      { id: "Mistral-7B-Instruct-v0.3-q4f16_1-MLC",    name: "Mistral 7B v0.3",        size: "4.6 GB", vram: "4.6 GB", desc: "Mistral AI · fast · well-rounded" },
+      { id: "Mistral-7B-Instruct-v0.3-q4f32_1-MLC",    name: "Mistral 7B v0.3 q32",    size: "5.6 GB", vram: "5.6 GB", desc: "Mistral AI · high precision" },
+      { id: "Mistral-7B-Instruct-v0.2-q4f16_1-MLC",    name: "Mistral 7B v0.2",        size: "4.6 GB", vram: "4.6 GB", desc: "Mistral AI · previous version" },
+      { id: "OpenHermes-2.5-Mistral-7B-q4f16_1-MLC",   name: "OpenHermes 2.5 Mistral", size: "4.6 GB", vram: "4.6 GB", desc: "Community · instruction-tuned Mistral" },
+      { id: "NeuralHermes-2.5-Mistral-7B-q4f16_1-MLC", name: "NeuralHermes 2.5",       size: "4.6 GB", vram: "4.6 GB", desc: "Community · enhanced Mistral fine-tune" },
+      { id: "WizardMath-7B-V1.1-q4f16_1-MLC",          name: "WizardMath 7B",          size: "4.6 GB", vram: "4.6 GB", desc: "Community · math specialist · Mistral base" },
+    ]
+  },
+  {
+    category: "Hermes (NousResearch)",
+    models: [
+      { id: "Hermes-3-Llama-3.2-3B-q4f16_1-MLC",     name: "Hermes 3 Llama 3B",     size: "2.3 GB", vram: "2.3 GB", desc: "NousResearch · instruction + function calling" },
+      { id: "Hermes-3-Llama-3.1-8B-q4f16_1-MLC",     name: "Hermes 3 Llama 8B",     size: "4.9 GB", vram: "4.9 GB", desc: "NousResearch · powerful community model" },
+      { id: "Hermes-2-Pro-Llama-3-8B-q4f16_1-MLC",   name: "Hermes 2 Pro Llama 8B", size: "5.0 GB", vram: "5.0 GB", desc: "NousResearch · function calling specialist" },
+      { id: "Hermes-2-Theta-Llama-3-8B-q4f16_1-MLC", name: "Hermes 2 Theta 8B",     size: "5.0 GB", vram: "5.0 GB", desc: "NousResearch · merged reasoning model" },
+      { id: "Hermes-2-Pro-Mistral-7B-q4f16_1-MLC",   name: "Hermes 2 Pro Mistral",  size: "4.0 GB", vram: "4.0 GB", desc: "NousResearch · Mistral base · function calling" },
+    ]
+  },
+  {
+    category: "SmolLM2 (HuggingFace)",
+    models: [
+      { id: "SmolLM2-135M-Instruct-q0f32-MLC",    name: "SmolLM2 135M",     size: "719 MB", vram: "719 MB", desc: "HuggingFace · smallest available model" },
+      { id: "SmolLM2-360M-Instruct-q4f16_1-MLC",  name: "SmolLM2 360M",     size: "376 MB", vram: "376 MB", desc: "HuggingFace · tiny · very fast" },
+      { id: "SmolLM2-1.7B-Instruct-q4f16_1-MLC",  name: "SmolLM2 1.7B",     size: "1.8 GB", vram: "1.8 GB", desc: "HuggingFace · compact · capable" },
+      { id: "SmolLM2-1.7B-Instruct-q4f32_1-MLC",  name: "SmolLM2 1.7B q32", size: "2.7 GB", vram: "2.7 GB", desc: "HuggingFace · compact · high precision" },
+    ]
+  },
+  {
+    category: "StableLM (Stability AI)",
+    models: [
+      { id: "stablelm-2-zephyr-1_6b-q4f16_1-MLC-1k", name: "StableLM 2 1.6B (1k)", size: "1.5 GB", vram: "1.5 GB", desc: "Stability AI · compact · 1k context" },
+      { id: "stablelm-2-zephyr-1_6b-q4f16_1-MLC",    name: "StableLM 2 1.6B",      size: "2.1 GB", vram: "2.1 GB", desc: "Stability AI · compact · 4k context" },
+    ]
+  },
+  {
+    category: "TinyLlama & RedPajama (Community)",
+    models: [
+      { id: "TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC",      name: "TinyLlama 1.1B",   size: "1.5 GB", vram: "1.5 GB", desc: "Community · tiny · good for testing" },
+      { id: "RedPajama-INCITE-Chat-3B-v1-q4f16_1-MLC-1k", name: "RedPajama 3B (1k)",size: "2.0 GB", vram: "2.0 GB", desc: "Together AI · 1k context · low VRAM" },
+      { id: "RedPajama-INCITE-Chat-3B-v1-q4f16_1-MLC",    name: "RedPajama 3B",     size: "3.0 GB", vram: "3.0 GB", desc: "Together AI · community model" },
+    ]
+  },
 ];
+const MODELS = MODEL_CATALOG.flatMap(c => c.models);
 
 const COLORS = {
   person:  { fill:'#AFA9EC', stroke:'#534AB7', text:'#26215C' },
@@ -502,22 +602,90 @@ Edges can reference both new and existing labels. Labels must match existing one
 
 
 // Model list
-function buildModelList() {
+let activeLoadedModel = null;
+
+function buildModelList(filter) {
   const list = document.getElementById('model-list');
+  if (!list) return;
+  const q = (filter || '').toLowerCase();
   list.innerHTML = '';
-  MODELS.forEach(m => {
-    const card = document.createElement('div');
-    card.className = 'model-card' + (m.id === selectedModel ? ' selected' : '');
-    card.dataset.id = m.id;
-    card.innerHTML = `<div class="model-card-name">${m.name}</div><div class="model-card-desc">${m.desc}</div><span class="model-card-size" style="${m.api ? 'background:rgba(225,40,133,0.15);color:var(--pink)' : ''}">${m.size}</span>`;
-    card.onclick = () => {
-      selectedModel = m.id;
-      document.querySelectorAll('.model-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-    };
-    list.appendChild(card);
+
+  MODEL_CATALOG.forEach(cat => {
+    const filtered = cat.models.filter(m =>
+      !q || m.name.toLowerCase().includes(q) ||
+      m.desc.toLowerCase().includes(q) ||
+      cat.category.toLowerCase().includes(q)
+    );
+    if (!filtered.length) return;
+
+    const section = document.createElement('div');
+    section.className = 'models-category';
+
+    const title = document.createElement('div');
+    title.className = 'models-category-title';
+    title.textContent = cat.category;
+    section.appendChild(title);
+
+    const grid = document.createElement('div');
+    grid.className = 'models-grid';
+
+    filtered.forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'model-card' +
+        (m.id === selectedModel ? ' selected' : '') +
+        (m.id === activeLoadedModel ? ' active-model' : '');
+      card.dataset.id = m.id;
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'model-card-name';
+      nameEl.textContent = m.name;
+
+      const descEl = document.createElement('div');
+      descEl.className = 'model-card-desc';
+      descEl.textContent = m.desc;
+
+      const footer = document.createElement('div');
+      footer.className = 'model-card-footer';
+
+      const sizeEl = document.createElement('span');
+      sizeEl.className = m.api ? 'model-card-api' : 'model-card-size';
+      sizeEl.textContent = m.size;
+      footer.appendChild(sizeEl);
+
+      if (m.vram) {
+        const vramEl = document.createElement('span');
+        vramEl.className = 'model-card-vram';
+        vramEl.textContent = m.vram + ' VRAM';
+        footer.appendChild(vramEl);
+      }
+
+      if (m.id === activeLoadedModel) {
+        const badge = document.createElement('span');
+        badge.className = 'model-card-active-badge';
+        badge.textContent = 'Active';
+        footer.appendChild(badge);
+      }
+
+      card.appendChild(nameEl);
+      card.appendChild(descEl);
+      card.appendChild(footer);
+
+      card.onclick = () => {
+        selectedModel = m.id;
+        document.querySelectorAll('.model-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+      };
+
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    list.appendChild(section);
   });
 }
+
+window.filterModels = function(q) { buildModelList(q); };
+
 
 function setStatus(state, text) {
   document.getElementById('sdot').className = 'sdot ' + state;
@@ -531,6 +699,8 @@ window.loadModel = async function() {
 
   if (selectedModel === 'claude') {
     engine = null;
+    activeLoadedModel = selectedModel;
+    buildModelList();
     setStatus('ready', 'Claude API ready');
     document.getElementById('msg-input').disabled = false;
     document.getElementById('send-btn').disabled = false;
@@ -697,6 +867,8 @@ async function send() {
     const { text, tags, sources, searched } = await callModel(txt);
     hideTyping();
     appendMsgStreamed('ai', text, tags, () => { btn.disabled = false; input.disabled = false; input.focus(); }, sources, searched);
+    activeLoadedModel = selectedModel;
+    buildModelList();
     setStatus('ready', 'Running on your device');
     return; // onDone callback re-enables input
   } catch(e) {
@@ -864,6 +1036,14 @@ window.switchView = function(v) {
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
   }
 };
+
+window.openSettings = function() {
+  document.getElementById('settings-overlay').classList.add('open');
+};
+window.closeSettings = function() {
+  document.getElementById('settings-overlay').classList.remove('open');
+};
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSettings(); });
 
 window.openSettings = function() {
   document.getElementById('settings-overlay').classList.add('open');
